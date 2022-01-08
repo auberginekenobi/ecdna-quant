@@ -1,0 +1,36 @@
+#! /bin/bash
+
+###############
+## No touchy ##
+###############
+
+HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+########################
+## Begin editing here ##
+########################
+
+## Required arguments
+
+SAMPLE=test
+
+FRAG_FILE=$HERE/input/test.tsv.gz
+
+BARCODES_FILE=$HERE/input/barcodes.tsv.gz
+
+# Format as bash array: (a b c)
+ECDNA_BED=("$HERE/input/RCMB56_ecDNA_1.hg38.bed" \
+	"$HERE/input/RCMB56_ecDNA_2.hg38.bed" \
+	"$HERE/input/RCMB56_ecDNA_3.hg38.bed" \
+)
+
+OUTPUT_DIR=$HERE/out
+
+
+## These arguments have reasonable defaults (hg38)
+
+TMP_DIR=/tmp/ecdna-quant/$SAMPLE
+
+EXCLUDE_BED=$HERE/../data/exclude.hg38.bed
+
+BEDTOOLS_GENOME_FILE=$HERE/../data/hg38.fa.fai
