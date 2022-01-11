@@ -1,0 +1,53 @@
+#!/bin/bash
+
+set -e
+
+CONFIG=$1
+if [ ! -f "$CONFIG" ]; then
+	exit 'File "$CONFIG" does not exist'
+fi 
+
+source $CONFIG
+
+HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+mkdir -p $TMP_DIR
+RANDOM_REGIONS=$tmp/permutations.bed
+
+## Decompress 10X frag file and sort by barcode
+echo "subset-fragments on sample $SAMPLE"
+echo "Decompressing and sorting by barcode..."
+INT_FILE=$TMP_DIR/${SAMPLE}_atac_fragments.bed
+zcat $FRAG_FILE | tail -n +52 | sort -k4,4 -k1,1 -k2,2n > $INT_FILE
+
+echo "Subsetting bed file..."
+
+python3 $HERE/subset-fragments.py $INT_FILE $SAMPLE $BARCODES_FILE
+
+rm $INT_FILE
+
+## Generate random permutations
+echo "Generating random permutations..."
+module load cpu/0.15.4 gcc/10.2.0 bedtools2
+
+N_ITER=1000
+INT_FILE=$TMP_DIR/tmp.bed
+RANDOM_REGIONS=$TMP_DIR/permutations.bed
+seq $N_ITER | awk '{print "chr1\t1000000\t2000000"}' > $INT_FILE
+bedtools shuffle -i $INT_FILE -g $BEDTOOLS_GENOME_FILE -excl $EXCLUDE_BED > \
+        $RANDOM_REGIONS
+rm $INT_FILE
+
+## Count
+mkdir -p $OUTPUT_DIR
+
+arraylength=${#ECDNA_BED[@]}
+for (( i=0; i<${arraylength}; i++ )); do
+	BED=${ECDNA_BED[$i]}
+	echo "Counting ecDNA $(basename $BED) ..."
+	python3 $HERE/count-fragments.py --COLLAPSE_TARGET $BED $SAMPLE $OUTPUT_DIR/${SAMPLE}_ecDNA${i}.tsv
+done
+echo "Counting backgrounds ..."
+python3 $HERE/count-fragments.py $RANDOM_REGIONS $SAMPLE $OUTPUT_DIR/${SAMPLE}_bkgd.tsv
+
+echo "DONE"

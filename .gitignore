@@ -1,3 +1,9 @@
+# Project
+test/run.sbatch
+test/slurm-test-*.out
+src/test
+test/test
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,0 +1,26 @@
+#! /bin/bash
+
+###############
+## No touchy ##
+###############
+
+HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+########################
+## Begin editing here ##
+########################
+
+## Required arguments
+
+SAMPLE=
+
+FRAG_FILE=
+
+BARCODES_FILE=
+
+# Format as bash array: (a b c)
+ECDNA_BED=()
+
+EXCLUDE_BED=$HERE/data/exclude.hg38.bed
+
+## Optional arguments
