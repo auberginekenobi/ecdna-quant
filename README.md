@@ -25,6 +25,10 @@ Dependencies:
 -- argparse
 -- gzip
 -- pyranges
+-- pandas
+-- seaborn
+-- matplotlib
+-- statsmodels
 - bedtools 2
 
 ## Usage

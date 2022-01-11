@@ -42,12 +42,23 @@ rm $INT_FILE
 mkdir -p $OUTPUT_DIR
 
 arraylength=${#ECDNA_BED[@]}
+COUNTS_FILES=()
+ECDNA_LENGTHS=()
 for (( i=0; i<${arraylength}; i++ )); do
 	BED=${ECDNA_BED[$i]}
 	echo "Counting ecDNA $(basename $BED) ..."
-	python3 $HERE/count-fragments.py --COLLAPSE_TARGET $BED $SAMPLE $OUTPUT_DIR/${SAMPLE}_ecDNA${i}.tsv
+	COUNTS=$OUTPUT_DIR/${SAMPLE}_ecDNA${i}.tsv
+	python3 $HERE/count-fragments.py --COLLAPSE_TARGET $BED $SAMPLE $COUNTS
+	COUNTS_FILES+=($COUNTS)
+	ECDNA_LENGTHS+=$(python3 $HERE/bed-length.py $BED)
+
 done
 echo "Counting backgrounds ..."
-python3 $HERE/count-fragments.py $RANDOM_REGIONS $SAMPLE $OUTPUT_DIR/${SAMPLE}_bkgd.tsv
+BG_COUNTS=$OUTPUT_DIR/${SAMPLE}_bkgd.tsv
+python3 $HERE/count-fragments.py $RANDOM_REGIONS $SAMPLE $BG_COUNTS
 
+## Statistics
+python3 $HERE/permutation-test.py  --ecdna_counts $COUNTS_FILES \
+	 --bg_counts  $BG_COUNTS \
+	--ecdna_lengths $ECDNA_LENGTHS
 echo "DONE"
