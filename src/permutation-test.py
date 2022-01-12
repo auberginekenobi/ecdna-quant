@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from statsmodels.stats.multitest import multipletests
+import os
 
 def load_counts(file, ecDNA_len):
     '''
@@ -71,7 +72,7 @@ def gen_histograms(observed,backgrounds,outfile_prefix=None):
     backgrounds=backgrounds.loc[df.index]
     fig,axes = plt.subplots(h,w, figsize=(20,20))
     for i in range(h*w):
-        sns.histplot(ax=axes[i//h,i%h],data=backgrounds.iloc[i,:],binwidth=1)
+        sns.histplot(ax=axes[i//h,i%h],data=backgrounds.iloc[i,:],bins=20)
         # observed value
         axes[i//h,i%h].axvline(df.iloc[i,0],c='red')
         text = 'empirical p<'+str(round(df.iloc[i,1],3))
@@ -105,13 +106,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--ecdna_counts',nargs='+',help="1+ ecDNA counts files from count-fragments.py", required=True)
     parser.add_argument('--bg_counts',help="Counts file for the background regions from count-fragments",required=True)
-    parser.add_argument('--ecdna_lengths',nargs='+',help="Length in Mbp of each ecDNA.",required=True)
-    parser.add_argument('--put_file')
+    parser.add_argument('--ecdna_lengths',type=int,nargs='+',help="Length in Mbp of each ecDNA.",required=True)
+    parser.add_argument('--out_dir')
     args = parser.parse_args()
 
-    fgs = [load_counts(f) for f in args.ecdna_counts]
+    args.ecdna_lengths = [n/1000000 for n in args.ecdna_lengths] # convert to Mbp
+    fgs = [load_counts(args.ecdna_counts[i],args.ecdna_lengths[i]) for i in range(len(args.ecdna_counts))]
     bg = load_backgrounds(args.bg_counts)
     for i in range(len(fgs)):
-        gen_histograms(fgs[i],bg,'ecDNA'+str(i+1))
+        out_pref=os.path.join(args.out_dir,'ecDNA'+str(i+1)+'_histograms')
+        gen_histograms(fgs[i],bg,out_pref)
     c = classify(fgs,bg)
-    c.to_csv(args.out_file,sep='\t')
+    out_file=os.path.join(args.out_dir,'cell_amplicons.tsv')
+    c.to_csv(out_file,sep='\t')

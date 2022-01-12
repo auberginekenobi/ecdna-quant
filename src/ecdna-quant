@@ -28,7 +28,6 @@ rm $INT_FILE
 
 ## Generate random permutations
 echo "Generating random permutations..."
-module load cpu/0.15.4 gcc/10.2.0 bedtools2
 
 N_ITER=1000
 INT_FILE=$TMP_DIR/tmp.bed
@@ -50,15 +49,21 @@ for (( i=0; i<${arraylength}; i++ )); do
 	COUNTS=$OUTPUT_DIR/${SAMPLE}_ecDNA${i}.tsv
 	python3 $HERE/count-fragments.py --COLLAPSE_TARGET $BED $SAMPLE $COUNTS
 	COUNTS_FILES+=($COUNTS)
-	ECDNA_LENGTHS+=$(python3 $HERE/bed-length.py $BED)
+	ECDNA_LENGTHS+=" $(python3 $HERE/bed-length.py $BED)"
 
 done
 echo "Counting backgrounds ..."
 BG_COUNTS=$OUTPUT_DIR/${SAMPLE}_bkgd.tsv
 python3 $HERE/count-fragments.py $RANDOM_REGIONS $SAMPLE $BG_COUNTS
 
+for value in "${ECDNA_LENGTHS[@]}"; do
+	echo "beep"
+	echo $value
+done
+
 ## Statistics
 python3 $HERE/permutation-test.py  --ecdna_counts $COUNTS_FILES \
 	 --bg_counts  $BG_COUNTS \
-	--ecdna_lengths $ECDNA_LENGTHS
+	--ecdna_lengths $ECDNA_LENGTHS \
+	--out_dir $OUTPUT_DIR
 echo "DONE"
