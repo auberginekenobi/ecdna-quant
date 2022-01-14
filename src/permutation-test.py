@@ -119,6 +119,6 @@ if __name__ == "__main__":
     c = classify(fgs,bg)
     for i in range(len(fgs)):
         amp = c[c["ecDNA"+str(i+1)+"_status"]]
-        print("{} / {} cells amplified at ecDNA{} locus.".format(len(amp),len(c),i+1)
+        print("{} / {} cells amplified at ecDNA{} locus.".format(len(amp),len(c),i+1))
     out_file=os.path.join(args.out_dir,'cell_amplicons.tsv')
     c.to_csv(out_file,sep='\t')
