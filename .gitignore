@@ -4,6 +4,7 @@ test/slurm-test-*.out
 src/test
 test/test
 test/out
+test/out/*
 test/dependencies.sh
 
 # Byte-compiled / optimized / DLL files
