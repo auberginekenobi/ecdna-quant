@@ -12,7 +12,6 @@ source $CONFIG
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 mkdir -p $TMP_DIR
-RANDOM_REGIONS=$tmp/permutations.bed
 
 ## Decompress 10X frag file and sort by barcode
 echo "subset-fragments on sample $SAMPLE"
@@ -29,10 +28,14 @@ rm $INT_FILE
 ## Generate random permutations
 echo "Generating random permutations..."
 
+# Add ecDNA beds to exclude file
+NEW_EXCLUDE=$TMP_DIR/exclude.bed
+$HERE/merge-sort-beds.sh $EXCLUDE_BED ${ECDNA_BED[@]} > $NEW_EXCLUDE
+
 N_ITER=1000
 RANDOM_REGIONS=$TMP_DIR/permutations.bed
 bedtools random -n $N_ITER -l 1000000 -g $BEDTOOLS_GENOME_FILE \
-	| bedtools shuffle -g $BEDTOOLS_GENOME_FILE -excl $EXCLUDE_BED -f 0.01 > \
+	| bedtools shuffle -g $BEDTOOLS_GENOME_FILE -excl $NEW_EXCLUDE -f 0.01 > \
         $RANDOM_REGIONS
 
 ## Count
