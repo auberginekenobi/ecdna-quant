@@ -32,7 +32,7 @@ echo "Generating random permutations..."
 N_ITER=1000
 RANDOM_REGIONS=$TMP_DIR/permutations.bed
 bedtools random -n $N_ITER -l 1000000 -g $BEDTOOLS_GENOME_FILE \
-	| bedtools shuffle -g $BEDTOOLS_GENOME_FILE -excl $EXCLUDE_BED > \
+	| bedtools shuffle -g $BEDTOOLS_GENOME_FILE -excl $EXCLUDE_BED -f 0.01 > \
         $RANDOM_REGIONS
 
 ## Count
