@@ -54,14 +54,9 @@ echo "Counting backgrounds ..."
 BG_COUNTS=$OUTPUT_DIR/${SAMPLE}_bkgd.tsv
 python3 $HERE/count-fragments.py $RANDOM_REGIONS $SAMPLE $BG_COUNTS
 
-for value in "${ECDNA_LENGTHS[@]}"; do
-	echo "beep"
-	echo $value
-done
-
 ## Statistics
-python3 $HERE/permutation-test.py  --ecdna_counts $COUNTS_FILES \
-	 --bg_counts  $BG_COUNTS \
+python3 $HERE/permutation-test.py  --ecdna_counts ${COUNTS_FILES[@]} \
+	--bg_counts  $BG_COUNTS \
 	--ecdna_lengths $ECDNA_LENGTHS \
 	--out_dir $OUTPUT_DIR
 echo "DONE"

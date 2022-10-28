@@ -110,6 +110,9 @@ if __name__ == "__main__":
     parser.add_argument('--out_dir')
     args = parser.parse_args()
 
+    print("--ecdna_counts {}".format(args.ecdna_counts))
+    print("--ecdna_lengths {}".format(args.ecdna_lengths))
+
     args.ecdna_lengths = [n/1000000 for n in args.ecdna_lengths] # convert to Mbp
     fgs = [load_counts(args.ecdna_counts[i],args.ecdna_lengths[i]) for i in range(len(args.ecdna_counts))]
     bg = load_backgrounds(args.bg_counts)
