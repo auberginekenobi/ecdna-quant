@@ -12,12 +12,12 @@ This module estimates the abundance of a known extrachromosomal circular DNA seq
 ## Materials
 
 To use this module, the following are required:
-- 10X Genomics single-cell ATAC-seq (scATAC-seq) data  
-- Genomic co-ordinates of an ecDNA amplification in your sample. We have used [AmpliconArchitect](https://github.com/virajbdeshpande/AmpliconArchitect) to generate these data from bulk WGS.  
+- Single-cell or spatial sequencing data such as that produced by the 10X Genomics single-cell ATAC-seq (scATAC-seq) workflow. 
+- Genomic co-ordinates of an ecDNA amplification in your sample. We have used [AmpliconArchitect](https://github.com/AmpliconSuite/AmpliconArchitect) to generate these data from bulk WGS.  
 
 ## Installation & Dependencies
 
-Currently, this module is a bash script with python 3 dependencies. Future versions will include a containerized Docker version.
+Currently, this module is a bash script with python 3 dependencies. Compatible with Linux (Ubuntu 16) and Mac OS (M1) operating systems. Future versions may include a proper package and containerized Docker version if I ever get around to it.
 
 Dependencies:
 
@@ -33,4 +33,4 @@ Dependencies:
 
 ## Usage
 
-
+Copy the example `config` file to your desired project directory and edit to point to paths of the required files. Set the `$ECQ_HOME` environment variable to the root directory for this repository, eg. `Users/ochapman/software/ecdna-quant`. Run using the command `$ECQ_HOME/src/ecdna-quant config`.
