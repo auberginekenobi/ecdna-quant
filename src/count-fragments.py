@@ -1,16 +1,9 @@
-#!/bin/bash
+#!/bin/python3
 
 import argparse
 import os
 import pyranges as pr
 import pandas as pd
-
-parser = argparse.ArgumentParser()
-parser.add_argument('TARGET_FILE')
-parser.add_argument('FEATURES_DIR')
-parser.add_argument('OUT_FILE')
-parser.add_argument('--COLLAPSE_TARGET',default=False,action='store_true')
-args=parser.parse_args()
 
 def count_overlaps(target_file,fragments_dir):
     '''
@@ -32,11 +25,21 @@ def count_overlaps(target_file,fragments_dir):
     i = (r.Chromosome.astype(str) + ':' + r.Start.astype(str) + '-' + r.End.astype(str)).values
     return r.df.set_index(i).iloc[:,len(target.columns):].transpose()
 
-df = count_overlaps(args.TARGET_FILE,args.FEATURES_DIR)
-if args.COLLAPSE_TARGET:
-    print("collapsing...")
-    df = df.sum(axis=1)
+################
 
-# Write
-df.to_csv(args.OUT_FILE,sep='\t')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('TARGET_FILE')
+    parser.add_argument('FEATURES_DIR')
+    parser.add_argument('OUT_FILE')
+    parser.add_argument('--COLLAPSE_TARGET',default=False,action='store_true')
+    args=parser.parse_args()
+
+    df = count_overlaps(args.TARGET_FILE,args.FEATURES_DIR)
+    if args.COLLAPSE_TARGET:
+        print("collapsing...")
+        df = df.sum(axis=1)
+
+    # Write
+    df.to_csv(args.OUT_FILE,sep='\t')
 

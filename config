@@ -5,6 +5,7 @@
 ###############
 
 HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ECQ_HOME=/Users/ochapman/software/ecdna-quant
 
 ########################
 ## Begin editing here ##
@@ -12,15 +13,25 @@ HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 ## Required arguments
 
-SAMPLE=
+SAMPLE=test
 
-FRAG_FILE=
+FRAG_FILE=$ECQ_HOME/test/input/test.tsv.gz
 
-BARCODES_FILE=
+BARCODES_FILE=$ECQ_HOME/test/input/barcodes.tsv.gz
 
 # Format as bash array: (a b c)
-ECDNA_BED=()
+ECDNA_BED=("$ECQ_HOME/test/input/RCMB56_ecDNA_1.hg38.bed" \
+	"$ECQ_HOME/test/input/RCMB56_ecDNA_2.hg38.bed" \
+	"$ECQ_HOME/test/input/RCMB56_ecDNA_3.hg38.bed" \
+)
 
-EXCLUDE_BED=$HERE/data/exclude.hg38.bed
+OUTPUT_DIR=$HERE/out
 
-## Optional arguments
+
+## These arguments have reasonable defaults (hg38)
+
+TMP_DIR=/tmp/ecdna-quant/$SAMPLE
+
+EXCLUDE_BED=$ECQ_HOME/data/exclude.hg38.bed
+
+BEDTOOLS_GENOME_FILE=$ECQ_HOME/data/hg38.fa.fai
