@@ -9,7 +9,7 @@ fi
 
 source $CONFIG
 
-HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#HERE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 mkdir -p $TMP_DIR
 
@@ -17,11 +17,11 @@ mkdir -p $TMP_DIR
 echo "subset-fragments on sample $SAMPLE"
 echo "Decompressing and sorting by barcode..."
 INT_FILE=$TMP_DIR/${SAMPLE}_atac_fragments.bed
-zcat $FRAG_FILE | tail -n +52 | sort -k4,4 -k1,1 -k2,2n > $INT_FILE
+gunzip -c $FRAG_FILE | tail -n +52 | sort -k4,4 -k1,1 -k2,2n > $INT_FILE
 
 echo "Subsetting bed file..."
 
-python3 $HERE/subset-fragments.py $INT_FILE $SAMPLE $BARCODES_FILE
+python3 $ECQ_HOME/src/subset-fragments.py $INT_FILE $SAMPLE $BARCODES_FILE
 
 rm $INT_FILE
 
@@ -30,7 +30,7 @@ echo "Generating random permutations..."
 
 # Add ecDNA beds to exclude file
 NEW_EXCLUDE=$TMP_DIR/exclude.bed
-$HERE/merge-sort-beds.sh $EXCLUDE_BED ${ECDNA_BED[@]} > $NEW_EXCLUDE
+$ECQ_HOME/src/merge-sort-beds.sh $EXCLUDE_BED ${ECDNA_BED[@]} > $NEW_EXCLUDE
 
 N_ITER=1000
 RANDOM_REGIONS=$TMP_DIR/permutations.bed
@@ -48,17 +48,17 @@ for (( i=0; i<${arraylength}; i++ )); do
 	BED=${ECDNA_BED[$i]}
 	echo "Counting ecDNA $(basename $BED) ..."
 	COUNTS=$OUTPUT_DIR/${SAMPLE}_ecDNA${i}.tsv
-	python3 $HERE/count-fragments.py --COLLAPSE_TARGET $BED $SAMPLE $COUNTS
+	python3 $ECQ_HOME/src/count-fragments.py --COLLAPSE_TARGET $BED $SAMPLE $COUNTS
 	COUNTS_FILES+=($COUNTS)
-	ECDNA_LENGTHS+=" $(python3 $HERE/bed-length.py $BED)"
+	ECDNA_LENGTHS+=" $(python3 $ECQ_HOME/src/bed-length.py $BED)"
 
 done
 echo "Counting backgrounds ..."
 BG_COUNTS=$OUTPUT_DIR/${SAMPLE}_bkgd.tsv
-python3 $HERE/count-fragments.py $RANDOM_REGIONS $SAMPLE $BG_COUNTS
+python3 $ECQ_HOME/src/count-fragments.py $RANDOM_REGIONS $SAMPLE $BG_COUNTS
 
 ## Statistics
-python3 $HERE/permutation-test.py  --ecdna_counts ${COUNTS_FILES[@]} \
+python3 $ECQ_HOME/src/permutation-test.py  --ecdna_counts ${COUNTS_FILES[@]} \
 	--bg_counts  $BG_COUNTS \
 	--ecdna_lengths $ECDNA_LENGTHS \
 	--out_dir $OUTPUT_DIR

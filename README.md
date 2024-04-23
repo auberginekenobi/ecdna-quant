@@ -12,8 +12,8 @@ This module estimates the abundance of a known extrachromosomal circular DNA seq
 ## Materials
 
 To use this module, the following are required:
-- 10X Genomics single-cell ATAC-seq (scATAC-seq) data
-- Genomic co-ordinates of an ecDNA amplification in your sample. We have used [AmpliconArchitect](https://github.com/virajbdeshpande/AmpliconArchitect) to generate these data from bulk WGS.
+- 10X Genomics single-cell ATAC-seq (scATAC-seq) data  
+- Genomic co-ordinates of an ecDNA amplification in your sample. We have used [AmpliconArchitect](https://github.com/virajbdeshpande/AmpliconArchitect) to generate these data from bulk WGS.  
 
 ## Installation & Dependencies
 
@@ -21,15 +21,15 @@ Currently, this module is a bash script with python 3 dependencies. Future versi
 
 Dependencies:
 
-- python 3
--- argparse
--- gzip
--- pyranges
--- pandas
--- seaborn
--- matplotlib
--- statsmodels
-- bedtools 2
+- python 3  
+-- argparse  
+-- gzip  
+-- pyranges  
+-- pandas  
+-- seaborn  
+-- matplotlib  
+-- statsmodels  
+- bedtools 2  
 
 ## Usage
 
