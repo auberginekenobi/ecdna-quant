@@ -33,4 +33,4 @@ Dependencies:
 
 ## Usage
 
-Copy the example `config` file to your desired project directory and edit to point to paths of the required files. Set the `$ECQ_HOME` environment variable to the root directory for this repository, eg. `Users/ochapman/software/ecdna-quant`. Run using the command `$ECQ_HOME/src/ecdna-quant config`.
+Copy the example `config` file to your desired project directory and edit to point to paths of the required files. Set the `$ECQ_HOME` environment variable to the root directory for this repository, eg. `Users/ochapman/software/ecdna-quant`. Run using the command `$ECQ_HOME/src/ecdna-quant config`. See the `test` directory for a worked example.
